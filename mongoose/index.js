@@ -1,28 +1,78 @@
-let express= require('express')
+let express = require('express')
 var mongoose = require('mongoose');
-let enquireModel =require('./models/equirey.model');
+let enquireModel = require('./models/equirey.model');
 require('dotenv').config();
-let app=express();
+let app = express();
 
 app.use(express.json());
 
-app.post('/api/enquire-insert',(req,res)=>{
-  let {sName,sEmail,sPhone,sMessage}=req.body;
-  let enquiry= new enquireModel({
-    name:sName,
-    email:sEmail,
-    phone:sPhone,
-    message:sMessage
+app.post('/api/enquire-insert', (req, res) => {
+  let { sName, sEmail, sPhone, sMessage } = req.body;
+  let enquiry = new enquireModel({
+    name: sName,
+    email: sEmail,
+    phone: sPhone,
+    message: sMessage
   });
-  enquiry.save().then(()=>{
-    res.send({status:1,message:'enquiry saved successfully'})
-    
-  }).catch((err)=>{
-    res.send({status:0,message:'error while saving enquiry'},err)
+  enquiry.save().then(() => {
+    res.send({ status: 1, message: 'enquiry saved successfully' })
+
+  }).catch((error) => {
+    res.send({ status: 0, message: 'error while saving enquiry', error })
   })
 })
 
-mongoose.connect(process.env.DBURL).then(()=>{
+/*
+app.post("/api/enquire-insert", async (req, res) => {
+  try {
+    let { sName, sEmail, sPhone, sMessage } = req.body;
+
+    let enquire = new enquireModel({
+      name: sName,
+      email: sEmail,
+      phone: sPhone,
+      message: sMessage
+    });
+
+    await enquire.save();
+
+    res.send({ status: 1, message: 'enquiry saved successfully' });
+
+  } catch (error) {
+
+    if (error.code === 11000) {
+      res.send({ status: 0, message: 'Email already exists' });
+    } else {
+      res.send({
+        status: 0,
+        message: 'error while saving enquiry',
+        error: error
+      });
+    }
+
+  }
+});
+*/
+
+app.get("/api/enquiry-list", async (req, res) => {
+  let enquireyList = await enquireModel.find();
+  res.send({
+    status: 1,
+    message: 'enquire list',
+    data: enquireyList
+  })
+})
+
+app.delete("/api/enquiry-delete/:id",async (req,res)=>{
+  let enquiryId=req.params.id;
+  let  deletedEnquiry= await enquireModel.deleteOne({_id:enquiryId});
+  res.send({status:1,message:"enquiry deleted successfullly",id:enquiryId, delRes:deletedEnquiry})
+
+})
+
+
+
+mongoose.connect(process.env.DBURL).then(() => {
   app.listen(process.env.PORT)
 
 })
