@@ -1,6 +1,6 @@
 let express = require('express')
 var mongoose = require('mongoose');
-let enquireModel = require('./models/equirey.model');
+let enquireModel = require('./App/models/equirey.model');
 require('dotenv').config();
 let app = express();
 

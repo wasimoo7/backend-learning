@@ -95,7 +95,7 @@ app.put("/student-update/:id", async(req,res)=>{
     obj.sEmail=sEmail
   }
   let myDB = await dbConnection();
-  let studentCollection = myDB.collection("students")
+  let studentCollection = myDB.collection("students") 
   let updateRes=await studentCollection.updateOne({_id:new ObjectId(id)},{$set:obj})
   let resObj = {
     status: 1,
