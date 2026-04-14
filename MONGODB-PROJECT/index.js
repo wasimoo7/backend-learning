@@ -83,6 +83,14 @@ app.put("/student-update/:id", async(req,res)=>{
   if(sName!=="" && sName!==undefined && sName!==null){
     obj.sName=sName
   }
+ /*
+  if(sName){
+    obj.sName=sName
+  }
+  if(sEmail){
+    obj.sEmail=sEmail
+  }
+ */
   if(sEmail!=="" && sEmail!==undefined && sEmail!==null){
     obj.sEmail=sEmail
   }
