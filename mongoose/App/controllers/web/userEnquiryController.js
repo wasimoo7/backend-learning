@@ -16,6 +16,40 @@ let enquiryInsert = (req, res) => {
   })
 }
 
+
+ /*
+app.post("/api/enquire-insert", async (req, res) => {
+  try {
+    let { sName, sEmail, sPhone, sMessage } = req.body;
+
+    let enquire = new enquireModel({
+      name: sName,
+      email: sEmail,
+      phone: sPhone,
+      message: sMessage
+    });
+
+    await enquire.save();
+
+    res.send({ status: 1, message: 'enquiry saved successfully' });
+
+  } catch (error) {
+
+    if (error.code === 11000) {
+      res.send({ status: 0, message: 'Email already exists' });
+    } else {
+      res.send({
+        status: 0,
+        message: 'error while saving enquiry',
+        error: error
+      });
+    }
+
+  }
+});
+*/
+
+
 let enquiryList = async (req, res) => {
   let enquiryList = await enquireModel.find();
   res.send({
@@ -63,4 +97,26 @@ let enquiryUpdate = async (req, res) => {
   }
 
 }
+
+
+/*
+  app.put("/api/enquiry-update/id:",async (req,res)=>{
+    let enquiryId =req.params.id;
+    let{sName,sEmail,sPhone,sMessage}=req.body;
+    
+    let updateObj={
+      name:sName,
+      email:sEmail,
+      phone:sPhone,
+      message:sMessage
+    };
+
+    let updateRes=await enquireModel.updateOne({_id:enquiryId},updateObj)
+    res.send({status:1,message:"enquiry updated succesfully",updateRes})
+  })
+*/
+
 module.exports = { enquiryInsert, enquiryList, deletedEnquiry, enquiryUpdate }
+
+
+
