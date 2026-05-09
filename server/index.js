@@ -10,9 +10,11 @@ app.use(express.json());
 
 app.use("/web",enquiryRoutes)
 //connect to mongodb
+app.use("/view",enquiryRoutes)
 mongoose.connect(process.env.DBURI).then(()=>{
   app.listen(process.env.PORT)
 })
+
 
 
 

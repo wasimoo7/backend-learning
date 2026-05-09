@@ -1,5 +1,6 @@
 import React from "react"
 import { useState, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios"
 import { Button, Checkbox, Label, Textarea, TextInput } from "flowbite-react";
 import EnquiryList from "./EnquiryList.jsx"
@@ -7,7 +8,7 @@ import EnquiryList from "./EnquiryList.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
 
 export default function Enquiry() {
-
+  let[enquiryList,setenquiryList]=useState([])
   let [FormData, setFormData] = useState({
     sName: '',
     sEmail: '',
@@ -23,6 +24,7 @@ export default function Enquiry() {
     axios.post(`http://localhost:8000/web/api/enquire-insert`, FormData)
       .then((res) => {
         console.log(res.data)
+        toast.success('Enquiry Save Successfully')
 
         setFormData({
           sName: '',
@@ -34,6 +36,19 @@ export default function Enquiry() {
       })
   }
 
+  let getAllenquiry = () => {
+    axios.get(`http://localhost:8000/view/api/enquiry-List`)
+     .then((res)=>{
+      return res.data
+     }).then((finaldata)=>{
+      if(finaldata.status===1){
+        console.log(finaldata.enquiryList)
+        setenquiryList(finaldata.enquiryList)
+
+      }
+     })
+  }
+
   let getValue = (e) => {
     let inputName = e.target.name
     let inputValue = e.target.value
@@ -43,10 +58,14 @@ export default function Enquiry() {
 
 
   }
-
+  
+  useEffect(()=>{
+    getAllenquiry()
+  },[saveEnquiry])
 
   return (
     <div>
+      <ToastContainer />
       <h1 className="text-[20px]  py-6 font-bold ">User Enquiry</h1>
 
       <div className="grid grid-cols-[30%_auto] ">
@@ -88,7 +107,7 @@ export default function Enquiry() {
             <Button type="submit" className="bg-blue-400">Save</Button>
           </form>
         </div>
-        <EnquiryList />
+        <EnquiryList data={enquiryList}/>
 
 
       </div>

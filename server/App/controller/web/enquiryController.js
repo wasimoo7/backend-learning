@@ -26,5 +26,10 @@ let enquiryInsert = (req, res) => {
 
 }
 
+let enquiryList=async(req, res)=>{
+  let enquiry=await enquireModel.find()
+  res.send({status:1,enquiryList:enquiry})
 
-module.exports = { enquiryInsert }
+  
+}
+module.exports = { enquiryInsert,enquiryList } 
