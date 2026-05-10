@@ -9,12 +9,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 
 
 export default function Enquiry() {
   let[enquiryList,setenquiryList]=useState([])
+
   let [FormData, setFormData] = useState({
     sName: '',
     sEmail: '',
     sPhone: '',
     sMessage: '',
-
 
   })
 
@@ -37,12 +37,12 @@ export default function Enquiry() {
   }
 
   let getAllenquiry = () => {
-    axios.get(`http://localhost:8000/view/api/enquiry-List`)
+    axios.get(`http://localhost:8000/web/api/enquiry-List`)
      .then((res)=>{
       return res.data
      }).then((finaldata)=>{
       if(finaldata.status===1){
-        console.log(finaldata.enquiryList)
+
         setenquiryList(finaldata.enquiryList)
 
       }
@@ -56,7 +56,6 @@ export default function Enquiry() {
     oldData[inputName] = inputValue
     setFormData(oldData)
 
-
   }
   
   useEffect(()=>{
@@ -68,7 +67,7 @@ export default function Enquiry() {
       <ToastContainer />
       <h1 className="text-[20px]  py-6 font-bold ">User Enquiry</h1>
 
-      <div className="grid grid-cols-[30%_auto] ">
+      <div className="grid grid-cols-[30%_auto] w-[900px]">
         <div className="bg-gray-200 p-4 ">
           <h2 className="text-[20px]">Enquiry form</h2>
 
