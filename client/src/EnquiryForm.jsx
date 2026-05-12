@@ -8,45 +8,68 @@ import EnquiryList from "./EnquiryList.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
 
 export default function Enquiry() {
-  let[enquiryList,setenquiryList]=useState([])
+  let [enquiryList, setenquiryList] = useState([])
 
   let [FormData, setFormData] = useState({
-    sName: '',
-    sEmail: '',
-    sPhone: '',
-    sMessage: '',
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+    _id: ''
 
   })
 
+
+
   let saveEnquiry = (e) => {
     e.preventDefault()
+      console.log(FormData)
 
-    axios.post(`http://localhost:8000/web/api/enquire-insert`, FormData)
-      .then((res) => {
-        console.log(res.data)
-        toast.success('Enquiry Save Successfully')
-
-        setFormData({
-          sName: '',
-          sEmail: '',
-          sPhone: '',
-          sMessage: '',
-
+    if (FormData._id) {
+      axios.put(`http://localhost:8000/web/api/update/${FormData._id}`, FormData)
+        .then((res) => {
+          console.log(res.data)
+          toast.success('Enquiry Save Successfully')
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            message: '',
+              _id:''
+          })
+          getAllenquiry()
         })
-      })
+
+    } else {
+      axios.post(`http://localhost:8000/web/api/enquire-insert`, FormData)
+        .then((res) => {
+          console.log(res.data)
+          toast.success('Enquiry Save Successfully')
+
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            message: '',
+              _id:''
+          })
+          getAllenquiry()
+        })
+    }
+
   }
 
   let getAllenquiry = () => {
     axios.get(`http://localhost:8000/web/api/enquiry-List`)
-     .then((res)=>{
-      return res.data
-     }).then((finaldata)=>{
-      if(finaldata.status===1){
+      .then((res) => {
+        return res.data
+      }).then((finaldata) => {
+        if (finaldata.status === 1) {
 
-        setenquiryList(finaldata.enquiryList)
+          setenquiryList(finaldata.enquiryList)
 
-      }
-     })
+        }
+      })
   }
 
   let getValue = (e) => {
@@ -57,10 +80,10 @@ export default function Enquiry() {
     setFormData(oldData)
 
   }
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     getAllenquiry()
-  },[saveEnquiry])
+  }, [])
 
   return (
     <div>
@@ -76,37 +99,38 @@ export default function Enquiry() {
               <div className="mb-2 block">
                 <Label htmlFor="name">Your Name</Label>
               </div>
-              <TextInput  value={FormData.sName} onChange={getValue} name="sName" type="text" placeholder="Enter your Name" required />
+              <TextInput value={FormData.name} onChange={getValue} name="name" type="text" placeholder="Enter your Name" required />
             </div>
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="email">Your Email</Label>
               </div>
-              <TextInput  value={FormData.sEmail} onChange={getValue} name='sEmail' type="email" placeholder="Enter your Email" required />
+              <TextInput value={FormData.email} onChange={getValue} name='email' type="email" placeholder="Enter your Email" required />
             </div>
 
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="phone">Your Phone </Label>
               </div>
-              <TextInput  value={FormData.sPhone} onChange={getValue} name='sPhone' type="text" placeholder="Enter your phone" required />
+              <TextInput value={FormData.phone} onChange={getValue} name='phone' type="text" placeholder="Enter your phone" required />
             </div>
 
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="message">Your Message</Label>
               </div>
-              <Textarea  value={FormData.sMessage} onChange={getValue} name='sMessage' type="text" placeholder="Enter your Message" required />
+              <Textarea value={FormData.message} onChange={getValue} name='message' type="text" placeholder="Enter your Message" required />
             </div>
 
             <div className="flex items-center gap-2">
               <Checkbox id="remember" />
               <Label htmlFor="remember" className="text-black">Remember me</Label>
             </div>
-            <Button type="submit" className="bg-blue-400">Save</Button>
+            <Button type="submit" className="bg-blue-400">
+              {FormData._id ? "update" : "save"}</Button>
           </form>
         </div>
-        <EnquiryList data={enquiryList}/>
+        <EnquiryList data={enquiryList} setFormData={setFormData} getAllenquiry={getAllenquiry} />
 
 
       </div>

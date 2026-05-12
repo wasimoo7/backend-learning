@@ -1,13 +1,55 @@
 import React from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
 import axios from "axios"
+import Swal from 'sweetalert2'
 import { toast, ToastContainer } from "react-toastify";
-export default function EnquiryList({ data }) {
+export default function EnquiryList({ data, setFormData, getAllenquiry }) {
+
   let deleteRow = (id) => {
-    axios.delete(`http://localhost:8000/web/api/delete/${id}`)
-     .then((res)=>{
-      toast.success('enquiry deleted succesfully')
-     })
+
+    Swal.fire({
+      title: "Do you want to delete?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        axios.delete(`http://localhost:8000/web/api/delete/${id}`)
+          .then((res) => {
+            getAllenquiry()
+
+            toast.success('Enquiry deleted successfully')
+
+
+            Swal.fire("Deleted!", "", "success");
+          })
+
+      } else if (result.isDenied) {
+
+        Swal.fire("Changes are not deleted", "", "info");
+
+      }
+
+    })
+  }
+
+  let editRow = (id) => {
+    axios.get(`http://localhost:8000/web/api/single/${id}`)
+      .then((res) => {
+        let data = res.data.enquiry
+        setFormData({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+          _id: data._id
+        })
+        console.log(data)
+
+      })
 
   }
   return (
@@ -49,7 +91,7 @@ export default function EnquiryList({ data }) {
                       </button>
                     </TableCell>
                     <TableCell>
-                      <button className="font-medium text-white hover:underline dark:text-primary-500 bg-blue-500 px-3 py-1 rounded-md">
+                      <button onClick={() => { editRow(user._id) }} className="font-medium text-white hover:underline dark:text-primary-500 bg-blue-500 px-3 py-1 rounded-md">
                         Edit
                       </button>
                     </TableCell>
